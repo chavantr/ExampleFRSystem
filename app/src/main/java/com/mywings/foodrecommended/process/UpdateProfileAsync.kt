@@ -10,7 +10,7 @@ class UpdateProfileAsync : AsyncTask<JSONObject, Void, String>() {
     private lateinit var onUpdateProfileListener: OnUpdateProfileListener
 
     override fun doInBackground(vararg params: JSONObject?): String {
-        return httpConnectionUtil.requestPost("", params[0])
+        return httpConnectionUtil.requestPost(ConstantsUtil.URL + ConstantsUtil.UPDATE_PROFILE, params[0])
     }
 
     override fun onPostExecute(result: String?) {

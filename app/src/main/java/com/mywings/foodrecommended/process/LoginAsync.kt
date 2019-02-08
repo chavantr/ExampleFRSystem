@@ -12,7 +12,7 @@ class LoginAsync : AsyncTask<JSONObject, Void, JSONObject>() {
 
     override fun doInBackground(vararg params: JSONObject?): JSONObject {
 
-        val response = httpConnectionUtil.requestPost("", params[0])
+        val response = httpConnectionUtil.requestPost(ConstantsUtil.URL + ConstantsUtil.LOGIN, params[0])
 
         return JSONObject(response)
 

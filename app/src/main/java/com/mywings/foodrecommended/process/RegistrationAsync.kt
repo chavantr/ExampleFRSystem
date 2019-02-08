@@ -10,7 +10,7 @@ class RegistrationAsync : AsyncTask<JSONObject, Void, String>() {
 
 
     override fun doInBackground(vararg params: JSONObject?): String {
-        return httpConnectionUtil.requestPost("", params[0])
+        return httpConnectionUtil.requestPost(ConstantsUtil.URL + ConstantsUtil.REGISTRATION, params[0])
     }
 
     override fun onPostExecute(result: String?) {
