@@ -84,5 +84,11 @@
     <string name="welcome">Welcome :</string>
     <string name="tatyabhau_chavan">tatyabhau chavan</string>
     <string name="update">Update</string>
+    <string name="set_gym_time_morning">Set gym time (morning)</string>
+    <string name="select_time">Select time</string>
+    <string name="select_time_breakfast">Select time (breakfast)</string>
+    <string name="select_time_lunch">Select time (Lunch)</string>
+    <string name="select_time_dinner">Select time (Dinner)</string>
+    <string name="save">Save</string>
 
 </resources>
