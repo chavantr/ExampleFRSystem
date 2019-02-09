@@ -9,11 +9,15 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
+import com.mywings.foodrecommended.models.Food
+import com.mywings.foodrecommended.process.OnFoodListener
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import kotlinx.android.synthetic.main.app_bar_dashboard.*
 import kotlinx.android.synthetic.main.content_dashboard.*
+import org.json.JSONArray
 
-class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, OnFoodListener {
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,5 +73,28 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         }
         //drawer_layout.closeDrawer(GravityCompat.START)
         //true
+    }
+
+    override fun onFoodSuccess(result: JSONArray) {
+        if (null != result && result.length() > 0) {
+            var foods = ArrayList<Food>()
+            for (i in 0..(result.length() - 1)) {
+                val node = result.getJSONObject(i)
+                var food = Food()
+                food.id = node.getInt("Id")
+                food.name = node.getString("Name")
+                food.season = node.getString("Season")
+                food.desease = node.getString("Desease")
+                food.agegroupfrom = node.getString("AgeGroupFrom")
+                food.agegroupto = node.getString("AgeGroupTo")
+                food.medicine = node.getString("Medicine")
+                food.allergy = node.getString("Allergy")
+                food.pricerangefrom = node.getString("PriceRangeFrom")
+                food.pricerangeto = node.getString("PriceRangeTo")
+                food.gender = node.getString("Gender")
+                food.state = node.getString("State")
+                food.country = node.getString("Country")
+            }
+        }
     }
 }

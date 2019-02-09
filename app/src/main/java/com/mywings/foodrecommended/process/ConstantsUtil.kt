@@ -10,4 +10,6 @@ object ConstantsUtil {
 
     const val UPDATE_PROFILE = "UpdateProfile"
 
+    const val GET_FOOD = "GetFood"
+
 }

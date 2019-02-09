@@ -2,16 +2,21 @@ package com.mywings.foodrecommended
 
 import android.app.TimePickerDialog
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.text.format.DateFormat
+import android.widget.TextView
+import com.mywings.foodrecommended.notification.NotificationHelper
 import kotlinx.android.synthetic.main.activity_setting.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class SettingActivity : AppCompatActivity() {
 
     private val calendar = Calendar.getInstance()!!
     private lateinit var time: Array<String>
+    private var lstControls = ArrayList<TextView>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,10 +70,33 @@ class SettingActivity : AppCompatActivity() {
 
         }
 
+        lstControls.add(lblGymTimeMor)
+        lstControls.add(lblTimeForBreakfast)
+        lstControls.add(lblTimeForLunch)
+        lstControls.add(lblTimeForDinner)
+
         btnSave.setOnClickListener {
 
-            for(i in 0..4){
+            var ii = 0
 
+            for (i in lstControls.indices) {
+                if (lstControls.get(i).text.contains(":")) {
+                    val node = lstControls.get(i).text.split(":")
+                    NotificationHelper.scheduleRepeatingRTCNotification(this@SettingActivity, node[0], node[1], i)
+                    NotificationHelper.enableBootReceiver(this@SettingActivity)
+                    ii += 1
+                }
+            }
+
+            if (ii > 0) {
+                var snack = Snackbar.make(btnSave, "Saved successfully", Snackbar.LENGTH_INDEFINITE)
+                snack.setAction("Ok") {
+                    finish()
+                }
+                snack.show()
+            } else {
+                var snack = Snackbar.make(btnSave, "Please set time", Snackbar.LENGTH_LONG)
+                snack.show()
             }
 
         }
