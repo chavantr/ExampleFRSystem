@@ -90,5 +90,6 @@
     <string name="select_time_lunch">Select time (Lunch)</string>
     <string name="select_time_dinner">Select time (Dinner)</string>
     <string name="save">Save</string>
+    <string name="food_detail">Food detail</string>
 
 </resources>

@@ -14,5 +14,6 @@ data class User(
     var season: String = "",
     var height: String = "",
     var weight: String = "",
-    var exercise: String = ""
+    var exercise: String = "",
+    var income: String = ""
 )

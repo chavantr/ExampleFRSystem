@@ -9,29 +9,41 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
+import com.mywings.foodrecommended.binder.FoodAdapter
 import com.mywings.foodrecommended.models.Food
+import com.mywings.foodrecommended.process.GetFoodRecommendeAsync
 import com.mywings.foodrecommended.process.OnFoodListener
+import com.mywings.foodrecommended.process.ProgressDialogUtil
+import com.mywings.foodrecommended.process.UserInfoHolder
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import kotlinx.android.synthetic.main.app_bar_dashboard.*
 import kotlinx.android.synthetic.main.content_dashboard.*
 import org.json.JSONArray
+import org.json.JSONObject
 
 class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, OnFoodListener {
 
+    private lateinit var progressDialogUtil: ProgressDialogUtil
+    private lateinit var foodAdapter: FoodAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
         setSupportActionBar(toolbar)
-
+        progressDialogUtil = ProgressDialogUtil(this)
         val toggle = ActionBarDrawerToggle(
             this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
         )
+
+        var view = nav_view.getHeaderView(0)
+
+
+
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
         nav_view.setNavigationItemSelectedListener(this)
         lstContent.layoutManager = LinearLayoutManager(this)
-
+        initGetFood();
     }
 
     override fun onBackPressed() {
@@ -71,11 +83,29 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 false
             }
         }
-        //drawer_layout.closeDrawer(GravityCompat.START)
-        //true
+
+    }
+
+    private fun initGetFood() {
+        progressDialogUtil.show()
+        var request = JSONObject()
+        var param = JSONObject()
+        val user = UserInfoHolder.getInstance().user
+        param.put("Price", user.income)
+        param.put("Desease", user.predesea)
+        param.put("Allergy", user.allergy)
+        param.put("Medicines", user.medicine)
+        param.put("Gender", user.gender)
+        param.put("Age", user.age)
+        param.put("Age", user.age)
+        param.put("State", user.state)
+        request.put("request", param)
+        val getFoodRecommendeAsync = GetFoodRecommendeAsync()
+        getFoodRecommendeAsync.setOnFoodListener(this, request)
     }
 
     override fun onFoodSuccess(result: JSONArray) {
+        progressDialogUtil.hide()
         if (null != result && result.length() > 0) {
             var foods = ArrayList<Food>()
             for (i in 0..(result.length() - 1)) {
@@ -94,7 +124,10 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 food.gender = node.getString("Gender")
                 food.state = node.getString("State")
                 food.country = node.getString("Country")
+                foods.add(food)
             }
+            foodAdapter = FoodAdapter(foods)
+            lstContent.adapter = foodAdapter
         }
     }
 }
