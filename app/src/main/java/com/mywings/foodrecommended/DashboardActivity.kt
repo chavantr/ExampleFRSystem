@@ -18,6 +18,7 @@ import com.mywings.foodrecommended.process.UserInfoHolder
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import kotlinx.android.synthetic.main.app_bar_dashboard.*
 import kotlinx.android.synthetic.main.content_dashboard.*
+import kotlinx.android.synthetic.main.nav_header_dashboard.view.*
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -25,6 +26,8 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
     private lateinit var progressDialogUtil: ProgressDialogUtil
     private lateinit var foodAdapter: FoodAdapter
+    private val user = UserInfoHolder.getInstance().user
+    private var foods = ArrayList<Food>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +39,8 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         )
 
         var view = nav_view.getHeaderView(0)
-
+        view.lblName.text = user.name
+        view.textView.text = user.username
 
 
         drawer_layout.addDrawerListener(toggle)
@@ -124,10 +128,64 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 food.gender = node.getString("Gender")
                 food.state = node.getString("State")
                 food.country = node.getString("Country")
-                foods.add(food)
+                if (selectNon(food)) {
+                    foods.add(food)
+                } else if (selectUserSpecific(food)) {
+                    foods.add(food)
+                } else if (selectUserSpecificWith(food)) {
+                    var flag = false;
+                    if (checkUserDesease(food)) {
+                        flag = true;
+                    }
+                    if (checkUserAllergy(food)) {
+                        flag = true;
+                    }
+                    if (checkUserMedicine(food)) {
+                        flag = true;
+                    }
+                    if (flag) {
+                        foods.add(food)
+                    }
+                } else {
+                    if (food.pricerangefrom.isNullOrEmpty() && food.pricerangeto.isNullOrEmpty()) {
+                        if (checkUserIncome(food)) {
+                            foods.add(food)
+                        }
+                    }
+                }
             }
+
             foodAdapter = FoodAdapter(foods)
             lstContent.adapter = foodAdapter
         }
     }
+
+    private fun checkUserIncome(food: Food) =
+        food.pricerangefrom.toDouble() >= user.income.toDouble() && food.pricerangeto.toDouble() <= user.income.toDouble()
+
+    private fun checkUserMedicine(food: Food) =
+        !food.medicine.isNullOrEmpty() && food.medicine.contains(food.medicine, true)
+
+    private fun checkUserAllergy(food: Food) =
+        !food.allergy.isNullOrEmpty() && food.allergy.contains(user.allergy, true)
+
+    private fun checkUserDesease(food: Food) =
+        !food.desease.isNullOrEmpty() && food.desease.contains(user.predesea, true)
+
+    private fun selectUserSpecific(food: Food): Boolean {
+        return food.season.equals(user.season, true) && food.gender.equals(
+            user.gender,
+            true
+        ) && food.desease.isNullOrEmpty() && food.medicine.isNullOrEmpty() && food.allergy.isNullOrEmpty()
+    }
+
+    private fun selectUserSpecificWith(food: Food): Boolean {
+        return food.season.equals(user.season, true) && food.gender.equals(
+            user.gender,
+            true
+        ) && (!food.desease.isNullOrEmpty() || !food.medicine.isNullOrEmpty() || !food.allergy.isNullOrEmpty())
+    }
+
+    private fun selectNon(food: Food) =
+        food.season.isNullOrEmpty() && food.desease.isNullOrEmpty() && food.medicine.isNullOrEmpty() && food.allergy.isNullOrEmpty() && food.gender.isNullOrEmpty() && food.state.isNullOrEmpty()
 }
