@@ -1,9 +1,12 @@
 package com.mywings.foodrecommended
 
+import android.os.AsyncTask
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import com.mywings.foodrecommended.process.UpdatePrice
 import com.mywings.foodrecommended.process.UserInfoHolder
 import kotlinx.android.synthetic.main.activity_food_detail.*
+import org.json.JSONObject
 
 class FoodDetailActivity : AppCompatActivity() {
 
@@ -18,5 +21,10 @@ class FoodDetailActivity : AppCompatActivity() {
         lblSeason.text = "Season : ${food.season}"
         lblState.text = "State : ${food.state}"
 
+    }
+
+    private fun init() {
+        val updatePrice = UpdatePrice()
+        updatePrice.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, JSONObject())
     }
 }
