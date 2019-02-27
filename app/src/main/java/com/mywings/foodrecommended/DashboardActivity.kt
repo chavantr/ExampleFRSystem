@@ -152,6 +152,7 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                             foods.add(food)
                         }
                     }
+
                 }
             }
 
