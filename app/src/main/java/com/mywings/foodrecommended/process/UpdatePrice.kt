@@ -8,7 +8,7 @@ class UpdatePrice : AsyncTask<JSONObject, Void, String?>() {
     private val httpConnectionUtil = HttpConnectionUtil()
 
     override fun doInBackground(vararg params: JSONObject?): String? {
-        return httpConnectionUtil.requestPost(ConstantsUtil.URL, params[0])
+        return httpConnectionUtil.requestPost(ConstantsUtil.URL + ConstantsUtil.INSERT_FOOD, params[0])
     }
 
 }

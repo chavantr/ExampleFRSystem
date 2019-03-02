@@ -13,4 +13,6 @@ object ConstantsUtil {
 
     const val GET_FOOD = "FMS_GetFood"
 
+    const val INSERT_FOOD = "FMS_InsertFood"
+
 }

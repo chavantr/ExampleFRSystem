@@ -30,8 +30,8 @@ class MainActivity : AppCompatActivity(), OnLoginListener {
 
         btnLogin.setOnClickListener {
 
-            txtUserName.setText("xyz")
-            txtPassword.setText("xyz")
+            //txtUserName.setText("xyz")
+            //txtPassword.setText("xyz")
 
             if (txtUserName.text!!.isEmpty() && txtPassword.text!!.isEmpty()) {
                 Snackbar.make(btnSignUp, "All fields required.", Snackbar.LENGTH_LONG).show()
